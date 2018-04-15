@@ -31,10 +31,12 @@ int dimensiones(char* nombre, int &columnas, int &filas){
 		filas += 1;
 
 	}
-
-	cout << " " << columnas << " " << filas << endl;
+	return filas, columnas;
 
 }
+
+//funcion que cra las direcciones para cargar los datos
+
 void cargar_datos (char* nombre, double** datos, int columnas, int filas){
 
 	ifstream file("datos.txt");
@@ -55,15 +57,18 @@ void cargar_datos (char* nombre, double** datos, int columnas, int filas){
 	}
 }
 
+// crea n arreglo en dos dimensiones para retornar los datos
+
 
 double** arreglo2D(int M){
 	double **datos;
 	datos=new double*[M];
 	for (int i=0; i < M; i++)
-		datos[i]=new double*[M];
+		datos[i]=new double[M];
 	return datos;
 }
 
+// borra el areglo de la memoria
 
 void borrar_arreglo(double** mat, int N){
 	for (int i=0; i <N; i++){
@@ -71,6 +76,10 @@ void borrar_arreglo(double** mat, int N){
 	delete[] mat;
 	}
 }
+
+
+// funcion principañ
+
 
 int main(int argc, char* argv[]){
 
@@ -92,7 +101,6 @@ int main(int argc, char* argv[]){
 	borrar_arreglo( datos, n);
 	return 0;
 }
-		
 
 
 
