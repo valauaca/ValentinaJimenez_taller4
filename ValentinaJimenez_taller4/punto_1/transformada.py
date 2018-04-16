@@ -21,6 +21,7 @@ a=abrir_byn("hongo.png")
 print "La matriz de la imagen es: ", a
 
 
+
 # funcion para hacer la transformada de fourier en dos dimensiones
 
 def fourier2d (x):
@@ -60,6 +61,8 @@ def inversa( x ):
             mat[a,b] = z.real
     return mat
 
+
+print "trans real"
 
 tf= fourier2d(a)
 b= inversa(tf)

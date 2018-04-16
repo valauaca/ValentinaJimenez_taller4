@@ -1,6 +1,8 @@
 #include <iostream> 
 #include <fstream> 
 #include <string>
+#include <math.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -49,7 +51,6 @@ void cargar_datos (char* nombre, double** datos, int columnas, int filas){
 	ifstream file("datos.txt");
 	double x[filas*columnas];
 
-// cargar columna 1
 	for (int i=0; i < filas*columnas; i++){
 
 		file >> x[i];
@@ -86,74 +87,137 @@ void borrar_arreglo(double** mat, int N){
 }
 
 
+void agregar(char* nombre, double** datos, int columnas, int filas){
 
-// funcion principal
 
+	datos= arreglo2D(filas);
+	cargar_datos(nombre, datos, columnas, filas);
 
-int main(int argc, char* argv[]){
+	for (int i =0; i < filas-1; i++){
 
-	int m=0, n=0;
-	dimensiones(argv[1], m, n);
-
-	double **datos;
-	datos= arreglo2D(n);
-	cargar_datos(argv[1], datos, m, n);
-
-	for (int i =0; i < n-1; i++){
-
-		for (int j =0; j<m; j++){
+		for (int j =0; j<columnas; j++){
 			cout << datos[i][j]<<" ";
 		}
 		cout << endl;
 	}
 
-	borrar_arreglo( datos, n);
-	return 0;
+	borrar_arreglo( datos, filas);
+	
+
 }
 
+double* linspace(double*l, int xi, int xf, int N){
+
+	double d= (xf-xi)/(N-1.0);
+	for( int i=0; i<N; i++){
+		l[i]=(i*d);
+
+	}
+	return l;
+
+}
 
 
 // lagrange
 
 
-double lagrange(X,Y){
+double* lagrange(double* x, double* y, double* xnuevo, double* ynuevo, int N){
 
-	N= x.shape[0]
 
 	//linspace
-	double polinomio[N];
-
-
-	for (int i=0; i<N; i++){
-
-		polinomio[i]=0.0
-	}
 	
 	for (int k=0; k<N; k++){
 
-		resultado=1.0;
+		double resultado=1.0;
 		for (int i =0; i<N; i++){
 
-			v= Y[i]
+			double v= y[i];
 			for (int j =0; j<N; j++){
 
 				if ( i!=j){
-					v *= (X[k]-X[j])/(X[i]-X[j]);
+					v *= (xnuevo[k]-x[j])/(x[i]-x[j]);
+					resultado += v;
 				}
 			}
-			resultado += v;
+			
 		}
-		polinomio[k]= resultado-1;
+		ynuevo[k]= resultado-1.0;
 	}
-	return x, pol;
+	return ynuevo;
+}
+
+
+double* fourier( double* R, double* I, double* xnuevo, double* ynuevo, int N){
+
+	double real= 0.0;
+	double imaginario= 0.0;
+
+	for (int i= 0; i< N; i++){
+		for (int j=0; j<N; j++){
+			real += ynuevo[j] * cos((-2.0*3.1416*i*j)/N);
+			imaginario += ynuevo[j] * sin((-2.0*3.1416*i*j)/N);
+			R[j]= real;
+			I[j]= imaginario;
+			cout << R[j] << "  " << I[j] << endl;
+		}
+	}
+	return R, I;
+
+
+}
+
+double* frecuencias ( double* frec, double* R, double* I, int N){
+
+for (int i =0; i<N; i++){
+		double g=(R[i]*R[i])+ (I[i]*I[i]);
+		double S= pow(g,0.5);
+		frec[i] = S;
+		cout<<frec[i]<< " " << endl;
+	}
+	return frec;
+
 }
 
 
 
 
+// funcion principal
 
 
-		
+int main(int arg, char* argv[]){
+
+	int m=0, n=0;
+	dimensiones(argv[1], m, n);
+	double** data;
+	data= arreglo2D(n);
+	cargar_datos(argv[1],data, m, n);
+
+	double x[n];
+	double y[n];
+
+	for (int i=0; i<(n-1); i++){
+		x[i]=data[i][0];
+		y[i]=data[i][1];
+	}
+	double xi=x[0];
+	double xf=x[n-2];
 	
+	double xnuevo[n];
+	linspace( xnuevo, xi, xf, n-1);
+	double ynuevo[n];
 
+	lagrange(x,y, xnuevo, ynuevo,  n-1);
+	double R[n-1];
+	double I[n-1];
+	double frec[n-1];
+	cout<< "Parte real: " << " " << " parte Imaginaria: " << " " <<endl;
+	fourier( R, I, xnuevo, ynuevo, n-1);
+
+	cout << "Frecuencias"<< endl;
+
+	frecuencias(frec, R, I, n-1);
+
+
+	
+}	
 
