@@ -4,8 +4,16 @@
 
 using namespace std;
 
+double** arreglo2D(int M);
+void borrar_arreglo(double** mat, int N);
+int dimensiones(char* nombre, int &columnas, int &filas);
+void cargar_datos (char* nombre, double** datos, int columnas, int filas);
+
+
+
 
 // funcion que encuentra la dimesion de los datos (num filas y num de columnas) 
+
 int dimensiones(char* nombre, int &columnas, int &filas){
 
 	ifstream datos("datos.txt");
@@ -31,7 +39,6 @@ int dimensiones(char* nombre, int &columnas, int &filas){
 		filas += 1;
 
 	}
-	return filas, columnas;
 
 }
 
@@ -40,25 +47,26 @@ int dimensiones(char* nombre, int &columnas, int &filas){
 void cargar_datos (char* nombre, double** datos, int columnas, int filas){
 
 	ifstream file("datos.txt");
-	double valor;
 	double x[filas*columnas];
+
+// cargar columna 1
 	for (int i=0; i < filas*columnas; i++){
 
 		file >> x[i];
 	}
+	
 	for (int i =0; i < filas; i ++){
+		for(int j=0; j<columnas; j++){
 
-		for (int j =0; j< columnas; j++){
-
-			datos[i][j]= x[i*columnas+j];
-
-
+		datos[i][j]= x[i*columnas+j];
 		}
+		
 	}
 }
 
-// crea n arreglo en dos dimensiones para retornar los datos
 
+	
+// crea n arreglo en dos dimensiones para retornar los datos
 
 double** arreglo2D(int M){
 	double **datos;
@@ -78,7 +86,8 @@ void borrar_arreglo(double** mat, int N){
 }
 
 
-// funcion principañ
+
+// funcion principal
 
 
 int main(int argc, char* argv[]){
@@ -90,9 +99,9 @@ int main(int argc, char* argv[]){
 	datos= arreglo2D(n);
 	cargar_datos(argv[1], datos, m, n);
 
-	for (int i =0; i < n; i++){
+	for (int i =0; i < n-1; i++){
 
-		for (int j =0; j<n; j++){
+		for (int j =0; j<m; j++){
 			cout << datos[i][j]<<" ";
 		}
 		cout << endl;
@@ -101,6 +110,44 @@ int main(int argc, char* argv[]){
 	borrar_arreglo( datos, n);
 	return 0;
 }
+
+
+
+// lagrange
+
+
+double lagrange(X,Y){
+
+	N= x.shape[0]
+
+	//linspace
+	double polinomio[N];
+
+
+	for (int i=0; i<N; i++){
+
+		polinomio[i]=0.0
+	}
+	
+	for (int k=0; k<N; k++){
+
+		resultado=1.0;
+		for (int i =0; i<N; i++){
+
+			v= Y[i]
+			for (int j =0; j<N; j++){
+
+				if ( i!=j){
+					v *= (X[k]-X[j])/(X[i]-X[j]);
+				}
+			}
+			resultado += v;
+		}
+		polinomio[k]= resultado-1;
+	}
+	return x, pol;
+}
+
 
 
 
