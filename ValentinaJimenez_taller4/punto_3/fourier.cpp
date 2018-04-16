@@ -10,9 +10,11 @@ double** arreglo2D(int M);
 void borrar_arreglo(double** mat, int N);
 int dimensiones(char* nombre, int &columnas, int &filas);
 void cargar_datos (char* nombre, double** datos, int columnas, int filas);
-
-
-
+void agregar(char* nombre, double** datos, int columnas, int filas);
+double* linspace(double*l, int xi, int xf, int N);
+double* lagrange(double* x, double* y, double* xnuevo, double* ynuevo, int N);
+double* fourier( double* R, double* I, double* xnuevo, double* ynuevo, int N);
+double* frecuencias ( double* frec, double* R, double* I, int N);
 
 // funcion que encuentra la dimesion de los datos (num filas y num de columnas) 
 
@@ -215,7 +217,7 @@ int main(int arg, char* argv[]){
 
 	cout << "Frecuencias"<< endl;
 
-	frecuencias(frec, R, I, n-1);
+	frecuencias(frec, R, I, n);
 
 
 	

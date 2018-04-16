@@ -4,9 +4,14 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from scipy import misc
 from scipy import fftpack
+import sys
 
+## PARAMETROS
 
-# abrir imagen, metopdo sacado de 
+n_pixel_kernell= sys.argv[2]
+img= sys.argv[1]
+
+# abrir imagen, metopdo sacado de::
 
 def abrir_byn(img):
 
@@ -17,24 +22,21 @@ def abrir_byn(img):
 	array= plt.imread("blancoynegro.png")
 	return array
 
-a=abrir_byn("hongo.png")
-print "La matriz de la imagen es: ", a
+a= abrir_byn(img)
 
-
+M=(np.shape(a)[0])
+N=(np.shape(a)[1])
 
 # funcion para hacer la transformada de fourier en dos dimensiones
 
 def fourier2d (x):
-	global M,N
+	global M
+	global N
 
-	M=(np.shape(x)[0])
-	N=(np.shape(x)[1])
-	
 	# arreglo de ceros al cual pueden entrar numeros complejos
 	trans= np.zeros((M,N), dtype=complex)
 	
 	for i in range (M):
-
 		for j in range(N):
 			h=0.0
 			for a in range(M):
@@ -42,13 +44,14 @@ def fourier2d (x):
 					l=((float(i*a)/M)+ (float(j*b)/N))
 					h += x[a,b]*np.exp(-2j*np.pi*l)
 				
-			trans[i,j]=h/M/N
+			trans[i,j]=h
 	return trans
 
 # inversa para comprobar que la transformada anterior funcione
 
-def inversa( x ):
-    global M,N
+def inversa(x):
+    global M
+    global N
     mat = np.zeros((M,N),dtype=float)
     
     for a in range(M):
@@ -62,36 +65,34 @@ def inversa( x ):
     return mat
 
 
-print "trans real"
-
 tf= fourier2d(a)
 b= inversa(tf)
 print "RESULTADO", b 
 
-plt.imshow(b, cmap=plt.cm.Greys)
-plt.show()
 
-def gaussK():
+def gaussK(n_pixel_kernell):
 
-	global M,N
-	x= np.linspace(0.0, N-1,N)
-	y= np.linspace(0.0, M-1,M)
-	sigma=1.0
+	global M
+	global N
+	x, y = np.meshgrid(np.linspace(0.0,N-1,N), np.linspace(0.0,M-1,M))
 	m=0.0
 	
 	j= np.sqrt(x*x+y*y)
-	u= np.exp(-((j-m)**2/(2.0*sigma**2)))
+	u= np.exp(-((j-m)**2/(2.0*float(n_pixel_kernell)**2)))
 			
 	return (u)
 	
 
-K=fourier2d(gaussK())
+K=fourier2d(gaussK(n_pixel_kernell))
 
-final=inversa(k*ft)
+final=inversa(K*tf)
 
 print final
 plt.figure()
 plt.imshow(final, cmap="gray")
+
+# sacado de:
+plt.imsave("suave.png", final[:,:], cmap=plt.cm.gray)
 
 
 
